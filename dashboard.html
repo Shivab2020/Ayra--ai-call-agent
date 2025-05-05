@@ -1,0 +1,1929 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Ayra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #2d46c2;
+        --secondary-color: #6c757d;
+        --accent-color: #5567d9;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+      }
+      
+      body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--dark-color);
+        background-color: #f5f7ff;
+      }
+      
+      .navbar {
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      .navbar-brand {
+        font-weight: 700;
+        color: var(--primary-color);
+        position: relative;
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+        padding: 5px 10px;
+        overflow: hidden;
+        transition: all 0.5s ease;
+      }
+      
+      .navbar-brand::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.5s ease;
+      }
+      
+      .navbar-brand:hover {
+        color: var(--accent-color);
+        transform: translateY(-2px);
+      }
+      
+      .navbar-brand:hover::before {
+        transform: scaleX(1);
+      }
+      
+      .nav-link {
+        color: var(--dark-color);
+        font-weight: 500;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-link:hover {
+        color: var(--primary-color);
+      }
+      
+      .page-header {
+        background: #fff;
+        padding: 15px 0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+      }
+      
+      .dashboard-stats {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        height: 100%;
+      }
+      
+      .stat-card {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      
+      .stat-card:hover {
+        transform: translateY(-10px) !important;
+        box-shadow: 0 20px 30px rgba(0,0,0,0.15) !important;
+      }
+      
+      .stat-card h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      
+      .stat-card p {
+        margin-bottom: 0;
+        opacity: 0.8;
+        font-size: 0.9rem;
+      }
+      
+      .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.2;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+      }
+      
+      .nav-tabs {
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 15px;
+      }
+      
+      .nav-tabs .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: var(--secondary-color);
+        font-weight: 600;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+      }
+      
+      .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+      }
+      
+      .conversation-card {
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+      }
+      
+      .conversation-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      }
+      
+      .conversation-header {
+        background: #f8f9fa;
+        padding: 12px 15px;
+        border-bottom: 1px solid #eee;
+      }
+      
+      .conversation-header h5 {
+        margin-bottom: 3px;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      
+      .conversation-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+      }
+      
+      .conversation-tag {
+        display: inline-block;
+        padding: 1px 8px;
+        border-radius: 50px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-left: 8px;
+      }
+      
+      .tag-restaurant {
+        background-color: #e6f7ee;
+        color: #28a745;
+      }
+      
+      .tag-hospital {
+        background-color: #e7f5ff;
+        color: #0d6efd;
+      }
+      
+      .tag-reservation {
+        background-color: #fff4de;
+        color: #ffc107;
+      }
+      
+      .tag-order {
+        background-color: #feebf3;
+        color: #e83e8c;
+      }
+      
+      .tag-appointment {
+        background-color: #e6e6ff;
+        color: #6610f2;
+      }
+      
+      .conversation-content {
+        padding: 15px;
+      }
+      
+      .message {
+        margin-bottom: 12px;
+        display: flex;
+      }
+      
+      .message-content {
+        max-width: 80%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        position: relative;
+      }
+      
+      .message-time {
+        font-size: 0.65rem;
+        color: var(--secondary-color);
+        margin-top: 3px;
+      }
+      
+      .user-message .message-content {
+        background-color: #f0f2ff;
+        margin-right: auto;
+        margin-left: 12px;
+      }
+      
+      .assistant-message .message-content {
+        background-color: var(--primary-color);
+        color: #fff;
+        margin-left: auto;
+        margin-right: 12px;
+      }
+      
+      .conversation-footer {
+        background: #f8f9fa;
+        padding: 10px 15px;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+      }
+      
+      .action-buttons a {
+        color: var(--secondary-color);
+        margin-left: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      
+      .action-buttons a:hover {
+        color: var(--primary-color);
+      }
+      
+      .sidebar {
+        background: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        height: 100%;
+      }
+      
+      .sidebar h5 {
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #eee;
+        font-size: 1rem;
+      }
+      
+      .filter-group {
+        margin-bottom: 15px;
+      }
+      
+      .filter-group label {
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.9rem;
+      }
+      
+      .upcoming-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        transition: all 0.3s ease;
+      }
+      
+      .upcoming-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+      }
+      
+      .upcoming-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        color: #fff;
+      }
+      
+      .upcoming-icon.restaurant {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      }
+      
+      .upcoming-icon.hospital {
+        background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+      }
+      
+      .upcoming-details h6 {
+        font-weight: 600;
+        margin-bottom: 3px;
+        font-size: 0.85rem;
+      }
+      
+      .upcoming-details p {
+        color: var(--secondary-color);
+        margin-bottom: 0;
+        font-size: 0.75rem;
+      }
+      
+      .upcoming-date {
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+        margin-left: auto;
+      }
+      
+      footer {
+        background-color: #fff;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+        margin-top: 30px;
+        text-align: center;
+      }
+      
+      .copyright {
+        color: var(--secondary-color);
+        font-size: 0.85rem;
+      }
+
+      /* New styles for upcoming activities */
+      .upcoming-activities-container {
+        margin-top: 15px;
+        margin-bottom: 20px;
+      }
+
+      .category-heading {
+        font-weight: 600;
+        padding: 6px 8px;
+        margin-bottom: 8px;
+        background-color: #f5f7ff;
+        border-left: 3px solid var(--primary-color);
+        font-size: 0.9rem;
+      }
+
+      #restaurant-activities .category-heading {
+        border-color: #28a745;
+      }
+
+      #hospital-activities .category-heading {
+        border-color: #0d6efd;
+      }
+
+      .upcoming-item {
+        display: flex;
+        background: #fff;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+      }
+
+      .upcoming-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+      }
+
+      .upcoming-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+        flex-shrink: 0;
+      }
+
+      .upcoming-icon.restaurant {
+        background-color: rgba(40, 167, 69, 0.15);
+        color: #28a745;
+      }
+
+      .upcoming-icon.hospital {
+        background-color: rgba(13, 110, 253, 0.15);
+        color: #0d6efd;
+      }
+
+      .upcoming-details {
+        flex-grow: 1;
+        overflow: hidden;
+      }
+
+      .upcoming-details h6 {
+        margin-bottom: 3px;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .upcoming-details p {
+        margin-bottom: 0;
+        font-size: 0.75rem;
+        color: #666;
+      }
+
+      .upcoming-date {
+        text-align: right;
+        font-size: 0.75rem;
+        color: #888;
+        flex-shrink: 0;
+        margin-left: 8px;
+        min-width: 70px;
+      }
+
+      /* Conversation preview styles */
+      .preview-message {
+        padding: 8px;
+        margin-bottom: 6px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+      }
+
+      .message-count {
+        color: #666;
+        font-size: 0.75rem;
+        margin: 8px 0;
+      }
+
+      .extracted-data-preview {
+        background-color: #f8f9fa;
+        padding: 8px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+      }
+
+      .extracted-data-preview h6 {
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .extracted-data-preview ul {
+        padding-left: 18px;
+        margin-bottom: 0;
+        font-size: 0.8rem;
+      }
+
+      /* Loading indicators */
+      .loading-indicator {
+        text-align: center;
+        padding: 15px;
+        color: var(--secondary-color);
+      }
+      
+      .loading-indicator .spinner-border {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      /* Card and section titles */
+      .card-header {
+        padding: 12px 15px;
+      }
+      
+      .card-header h5 {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      
+      .card-body {
+        padding: 15px;
+      }
+      
+      .card-footer {
+        padding: 10px 15px;
+      }
+      
+      /* Compact button styles */
+      .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+      }
+      
+      /* History section max height */
+      .conversation-container {
+        max-height: 600px;
+        overflow-y: auto;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .row .col-md-6:first-child {
+          margin-bottom: 20px;
+        }
+      }
+
+      /* Add the following CSS for the language switcher and new UI elements right before the closing style tag */
+      .language-selector {
+        position: relative;
+        display: inline-block;
+        margin-left: 15px;
+      }
+
+      .language-selector select {
+        appearance: none;
+        background-color: transparent;
+        border: none;
+        color: var(--dark-color);
+        font-size: 0.85rem;
+        padding: 5px 15px 5px 5px;
+        cursor: pointer;
+      }
+
+      .language-selector::after {
+        content: "▼";
+        font-size: 8px;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+
+      .notification-bell {
+        position: relative;
+        display: inline-block;
+        margin-left: 15px;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #ff5252;
+        color: white;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .theme-toggle {
+        cursor: pointer;
+        margin-left: 15px;
+      }
+
+      .testimonial-card {
+        border-left: 4px solid var(--primary-color);
+        background-color: #f8f9fa;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+      }
+
+      .testimonial-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .testimonial-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+
+      .testimonial-name {
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .testimonial-location {
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+      }
+
+      .testimonial-content {
+        font-size: 0.85rem;
+        color: #495057;
+      }
+
+      .testimonial-rating {
+        color: #ffc107;
+        font-size: 0.75rem;
+        margin-top: 5px;
+      }
+
+      .quick-action-btn {
+        border-radius: 50px;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        background-color: #f0f2ff;
+        color: var(--primary-color);
+        border: 1px solid rgba(45, 70, 194, 0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+      }
+
+      .quick-action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background-color: var(--primary-color);
+        z-index: -1;
+        transition: width 0.3s ease;
+      }
+
+      .quick-action-btn:hover {
+        color: white;
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(45, 70, 194, 0.2);
+      }
+
+      .quick-action-btn:hover::before {
+        width: 100%;
+      }
+
+      .quick-action-btn i {
+        transition: transform 0.3s ease;
+      }
+
+      .quick-action-btn:hover i {
+        transform: translateX(3px);
+      }
+
+      .city-performance {
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+
+      .city-performance-bar {
+        height: 100%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      }
+
+      .agent-leaderboard {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .agent-leaderboard li {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f2ff;
+      }
+
+      .agent-rank {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: #f0f2ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      .top-rank {
+        background-color: #fff4de;
+        color: #ffc107;
+      }
+
+      .agent-info {
+        flex-grow: 1;
+      }
+
+      .agent-name {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 2px;
+      }
+
+      .agent-stats {
+        font-size: 0.75rem;
+        color: var(--secondary-color);
+      }
+
+      .agent-success {
+        font-weight: 600;
+        color: #28a745;
+      }
+
+      .dark-mode {
+        background-color: #1a1a2e !important;
+        color: #f0f0f0 !important;
+      }
+
+      .dark-mode .card,
+      .dark-mode .navbar,
+      .dark-mode .page-header,
+      .dark-mode .dashboard-stats,
+      .dark-mode .footer {
+        background-color: #242444 !important;
+        color: #f0f0f0 !important;
+      }
+
+      .dark-mode .card-header,
+      .dark-mode .card-footer {
+        background-color: #272750 !important;
+      }
+
+      .dark-mode .text-muted {
+        color: #adb5bd !important;
+      }
+
+      .dark-mode .nav-tabs .nav-link {
+        color: #adb5bd;
+      }
+
+      .dark-mode .nav-tabs .nav-link.active {
+        color: #f0f0f0;
+        border-bottom-color: var(--accent-color);
+      }
+
+      .widget-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .widget-title .link {
+        font-size: 0.75rem;
+        font-weight: normal;
+        color: var(--primary-color);
+      }
+
+      /* Add a few other utilities */
+      .fs-small {
+        font-size: 0.85rem;
+      }
+
+      .fs-smaller {
+        font-size: 0.75rem;
+      }
+
+      .rounded-pill {
+        border-radius: 50rem !important;
+      }
+
+      /* Tamil Font */
+      .font-tamil {
+        font-family: 'Noto Sans Tamil', sans-serif;
+      }
+      
+      /* Telugu Font */
+      .font-telugu {
+        font-family: 'Noto Sans Telugu', sans-serif;
+      }
+      
+      /* Malayalam Font */
+      .font-malayalam {
+        font-family: 'Noto Sans Malayalam', sans-serif;
+      }
+      
+      /* Kannada Font */
+      .font-kannada {
+        font-family: 'Noto Sans Kannada', sans-serif;
+      }
+      
+      /* Hindi Font */
+      .font-hindi {
+        font-family: 'Noto Sans Devanagari', sans-serif;
+      }
+
+      /* Pulse animation for notification badge */
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+      }
+      
+      .notification-badge {
+        animation: pulse 2s infinite;
+      }
+
+      /* Loading spinner animation */
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      
+      .loading-indicator .spinner-border {
+        animation: rotate 1s linear infinite;
+      }
+
+      /* Fade-in animation for content */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .dashboard-stats, .conversation-card, .upcoming-activities-container, .testimonial-card {
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      /* Enhanced dropdown animations */
+      .dropdown-menu {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
+      
+      .dropdown-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      
+      /* Toast notification animations */
+      @keyframes slideIn {
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
+      }
+      
+      .toast {
+        animation: slideIn 0.3s ease-out;
+      }
+      
+      /* Progress bar animations */
+      @keyframes progressFill {
+        from { width: 0; }
+        to { width: var(--target-width); }
+      }
+      
+      .city-performance-bar {
+        animation: progressFill 1.5s ease-out forwards;
+        animation-delay: 0.3s;
+        width: 0;
+      }
+      
+      /* Add a CSS variable for each bar */
+      #chennai-bar { --target-width: 78%; }
+      #bengaluru-bar { --target-width: 92%; }
+      #hyderabad-bar { --target-width: 65%; }
+      #kochi-bar { --target-width: 84%; }
+      
+      /* Enhanced tabs with animation */
+      .nav-tabs .nav-link {
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .nav-tabs .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--primary-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+      
+      .nav-tabs .nav-link.active::after {
+        transform: scaleX(1);
+      }
+      
+      /* Card and page transitions */
+      .card {
+        transition: all 0.3s ease;
+      }
+      
+      .card:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      }
+
+      /* Add some additional styles for the brand right after navbar */
+      .brand-text {
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        font-weight: 800;
+      }
+      
+      .brand-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(135deg, var(--accent-color), #ff5e62);
+        border-radius: 50%;
+        margin-left: 3px;
+        position: relative;
+        top: -10px;
+        animation: pulse 2s infinite;
+      }
+      
+      /* Animated city performance bars */
+      #city-performance .city-performance {
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        overflow: hidden;
+      }
+
+      /* Ripple effect for buttons */
+      .quick-action-btn {
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .ripple-effect {
+        position: absolute;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.6);
+        width: 100px;
+        height: 100px;
+        margin-top: -50px;
+        margin-left: -50px;
+        animation: ripple 0.6s ease-out;
+        opacity: 0;
+      }
+      
+      @keyframes ripple {
+        0% {
+          transform: scale(0);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(3);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          <span class="brand-text">Ayra</span>
+          <span class="brand-dot d-none d-md-inline"></span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="demo.html">Call Demo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="dashboard.html">Dashboard</a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center ms-3">
+            <div class="language-selector">
+              <select id="language-select">
+                <option value="en">English</option>
+                <option value="ta">தமிழ்</option>
+                <option value="te">తెలుగు</option>
+                <option value="ml">മലയാളം</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="hi">हिंदी</option>
+              </select>
+            </div>
+            <div class="notification-bell">
+              <i class="fas fa-bell"></i>
+              <div class="notification-badge">3</div>
+            </div>
+            <div class="theme-toggle" id="theme-toggle">
+              <i class="fas fa-moon"></i>
+            </div>
+            <div class="dropdown ms-3">
+              <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle me-1"></i> Arjun R
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="page-header">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h1 class="mb-0">Dashboard</h1>
+            <p class="text-muted">Overview of AI call agent activities and conversation history</p>
+          </div>
+          <div class="col-lg-4 text-end">
+            <div class="btn-group">
+              <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fas fa-calendar me-2"></i> Last 30 Days
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                <li><a class="dropdown-item" href="#">Last 90 Days</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Custom Range</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Content -->
+    <section class="py-3">
+      <div class="container">
+        <!-- Analytics and Upcoming Activities Side by Side -->
+        <div class="row mb-4">
+          <!-- Analytics Column -->
+          <div class="col-lg-8">
+            <div class="dashboard-stats">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Analytics Dashboard</h5>
+                <div class="btn-group btn-group-sm">
+                  <button type="button" class="btn btn-outline-primary active">Day</button>
+                  <button type="button" class="btn btn-outline-primary">Week</button>
+                  <button type="button" class="btn btn-outline-primary">Month</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-lg-6">
+                  <div class="stat-card position-relative">
+                    <div>
+                      <h3>258</h3>
+                      <p>Total Conversations</p>
+                    </div>
+                    <i class="fas fa-comments stat-icon"></i>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <div class="stat-card position-relative">
+                    <div>
+                      <h3>₹2.4L</h3>
+                      <p>Restaurant Orders</p>
+                    </div>
+                    <i class="fas fa-utensils stat-icon"></i>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <div class="stat-card position-relative">
+                    <div>
+                      <h3>87</h3>
+                      <p>Hospital Appointments</p>
+                    </div>
+                    <i class="fas fa-hospital stat-icon"></i>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                  <div class="stat-card position-relative">
+                    <div>
+                      <h3>95%</h3>
+                      <p>Task Success Rate</p>
+                    </div>
+                    <i class="fas fa-check-circle stat-icon"></i>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Performance Metrics -->
+              <div class="mt-3">
+                <h6 class="mb-2">Agent Performance</h6>
+                <div class="card border-0 bg-light">
+                  <div class="card-body p-3">
+                    <div class="row align-items-center">
+                      <div class="col-md-4 text-center border-end">
+                        <h5 class="mb-1">4.8/5</h5>
+                        <small class="text-muted">Average Rating</small>
+                      </div>
+                      <div class="col-md-4 text-center border-end">
+                        <h5 class="mb-1">98%</h5>
+                        <small class="text-muted">Task Completion</small>
+                      </div>
+                      <div class="col-md-4 text-center">
+                        <h5 class="mb-1">2:24</h5>
+                        <small class="text-muted">Avg Call Time</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- City-wise Performance -->
+              <div class="mt-3" id="city-performance">
+                <div class="widget-title">
+                  <span>City-wise Performance</span>
+                  <a href="#" class="link">View Report</a>
+                </div>
+                <div class="row fs-small">
+                  <div class="col-sm-6 mb-2">
+                    <div class="d-flex justify-content-between mb-1">
+                      <span>Chennai</span>
+                      <span>78%</span>
+                    </div>
+                    <div class="city-performance">
+                      <div class="city-performance-bar" id="chennai-bar"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <div class="d-flex justify-content-between mb-1">
+                      <span>Bengaluru</span>
+                      <span>92%</span>
+                    </div>
+                    <div class="city-performance">
+                      <div class="city-performance-bar" id="bengaluru-bar"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <div class="d-flex justify-content-between mb-1">
+                      <span>Hyderabad</span>
+                      <span>65%</span>
+                    </div>
+                    <div class="city-performance">
+                      <div class="city-performance-bar" id="hyderabad-bar"></div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <div class="d-flex justify-content-between mb-1">
+                      <span>Kochi</span>
+                      <span>84%</span>
+                    </div>
+                    <div class="city-performance">
+                      <div class="city-performance-bar" id="kochi-bar"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Top Agents Leaderboard -->
+              <div class="mt-3">
+                <div class="widget-title">
+                  <span>Top Performing Agents</span>
+                  <a href="#" class="link">View All</a>
+                </div>
+                <ul class="agent-leaderboard">
+                  <li>
+                    <div class="agent-rank top-rank">1</div>
+                    <div class="agent-info">
+                      <div class="agent-name">Lakshmi Venkatesh</div>
+                      <div class="agent-stats">328 calls, <span class="agent-success">97% success</span></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="agent-rank top-rank">2</div>
+                    <div class="agent-info">
+                      <div class="agent-name">Ramesh Kumar</div>
+                      <div class="agent-stats">296 calls, <span class="agent-success">95% success</span></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="agent-rank top-rank">3</div>
+                    <div class="agent-info">
+                      <div class="agent-name">Priya Sundaram</div>
+                      <div class="agent-stats">275 calls, <span class="agent-success">93% success</span></div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              
+              <!-- Quick Actions -->
+              <div class="mt-3">
+                <div class="widget-title">
+                  <span>Quick Actions</span>
+                </div>
+                <div class="quick-actions-container">
+                  <button class="btn quick-action-btn" id="download-report-btn">
+                    <i class="fas fa-download me-1"></i> Download Report
+                  </button>
+                  <button class="btn quick-action-btn" id="add-agent-btn">
+                    <i class="fas fa-user-plus me-1"></i> Add Agent
+                  </button>
+                  <button class="btn quick-action-btn" id="settings-btn">
+                    <i class="fas fa-cog me-1"></i> Settings
+                  </button>
+                  <button class="btn quick-action-btn" id="alerts-btn">
+                    <i class="fas fa-bell me-1"></i> Alerts
+                  </button>
+                  <button class="btn quick-action-btn" id="analytics-btn">
+                    <i class="fas fa-chart-line me-1"></i> Analytics
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Upcoming Activities Column -->
+          <div class="col-lg-4">
+            <div class="card h-100">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Upcoming Activities</h5>
+                <button class="btn btn-sm btn-outline-primary" id="refresh-activities">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="card-body p-0">
+                <!-- Activities Tabs -->
+                <ul class="nav nav-tabs nav-fill" id="activitiesTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="restaurant-activities-tab" data-bs-toggle="tab" data-bs-target="#restaurant-activities" type="button" role="tab">
+                      Restaurant
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="hospital-activities-tab" data-bs-toggle="tab" data-bs-target="#hospital-activities" type="button" role="tab">
+                      Hospital
+                    </button>
+                  </li>
+                </ul>
+
+                <!-- Activities Tab Content -->
+                <div class="tab-content p-3" id="activitiesTabsContent">
+                  <!-- Restaurant Activities Tab -->
+                  <div class="tab-pane fade show active" id="restaurant-activities" role="tabpanel">
+                    <div id="restaurant-activities-loading" class="loading-indicator">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
+                    <div id="restaurant-activities-full">
+                      <!-- Restaurant sample activities -->
+                      <div class="upcoming-item">
+                        <div class="upcoming-icon restaurant">
+                          <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="upcoming-details">
+                          <h6>Table Reservation</h6>
+                          <p>Arjun Reddy - Table for 4</p>
+                        </div>
+                        <div class="upcoming-date">
+                          Today, 7:30 PM
+                        </div>
+                      </div>
+                      
+                      <div class="upcoming-item">
+                        <div class="upcoming-icon restaurant">
+                          <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="upcoming-details">
+                          <h6>Delivery Order</h6>
+                          <p>Kavitha Suresh - ₹750</p>
+                        </div>
+                        <div class="upcoming-date">
+                          Today, 8:15 PM
+                        </div>
+                      </div>
+                      
+                      <div class="upcoming-item">
+                        <div class="upcoming-icon restaurant">
+                          <i class="fas fa-chair"></i>
+                        </div>
+                        <div class="upcoming-details">
+                          <h6>Dosa Brunch</h6>
+                          <p>Vijay Anand - Table for 6</p>
+                        </div>
+                        <div class="upcoming-date">
+                          Tomorrow, 11:00 AM
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Hospital Activities Tab -->
+                  <div class="tab-pane fade" id="hospital-activities" role="tabpanel">
+                    <div id="hospital-activities-loading" class="loading-indicator">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
+                    <div id="hospital-activities-full">
+                      <!-- Hospital sample activities -->
+                      <div class="upcoming-item">
+                        <div class="upcoming-icon hospital">
+                          <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <div class="upcoming-details">
+                          <h6>Medical Appointment</h6>
+                          <p>Ananya Krishnan - Dr. Rajan</p>
+                        </div>
+                        <div class="upcoming-date">
+                          Today, 3:30 PM
+                        </div>
+                      </div>
+                      
+                      <div class="upcoming-item">
+                        <div class="upcoming-icon hospital">
+                          <i class="fas fa-prescription"></i>
+                        </div>
+                        <div class="upcoming-details">
+                          <h6>Follow-up Call</h6>
+                          <p>Ravi Menon - Cardiology</p>
+                        </div>
+                        <div class="upcoming-date">
+                          Tomorrow, 10:00 AM
+                        </div>
+                      </div>
+                      
+                      <div class="upcoming-item">
+                        <div class="upcoming-icon hospital">
+                          <i class="fas fa-notes-medical"></i>
+                        </div>
+                        <div class="upcoming-details">
+                          <h6>Lab Results</h6>
+                          <p>Sarika Patel - Dr. Meenakshi</p>
+                        </div>
+                        <div class="upcoming-date">
+                          Tomorrow, 2:00 PM
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer bg-light">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control form-control-sm" id="activity-search" placeholder="Search activities...">
+                      <button class="btn btn-sm btn-primary" type="button" id="filter-apply">
+                        <i class="fas fa-search"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-secondary" type="button" id="filter-reset">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-2 text-end">
+                    <small class="text-muted">Last updated: <span id="last-updated-time">Just now</span></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Testimonials and Conversation History -->
+        <div class="row mt-4">
+          <!-- Testimonials Section -->
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Customer Testimonials</h5>
+                <span class="badge bg-success rounded-pill">New</span>
+              </div>
+              <div class="card-body">
+                <div class="testimonial-card">
+                  <div class="testimonial-header">
+                    <div class="testimonial-avatar">SK</div>
+                    <div>
+                      <div class="testimonial-name">Srinivasan Kumar</div>
+                      <div class="testimonial-location">Chennai, Tamil Nadu</div>
+                    </div>
+                  </div>
+                  <div class="testimonial-content">
+                    "The AI agent was very polite and understood my South Indian accent perfectly. Booking a table was effortless!"
+                  </div>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                </div>
+                
+                <div class="testimonial-card">
+                  <div class="testimonial-header">
+                    <div class="testimonial-avatar">AR</div>
+                    <div>
+                      <div class="testimonial-name">Aarti Raghavan</div>
+                      <div class="testimonial-location">Bengaluru, Karnataka</div>
+                    </div>
+                  </div>
+                  <div class="testimonial-content">
+                    "Made my hospital appointment in less than 2 minutes! The agent even followed up to remind me. Amazing service."
+                  </div>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </div>
+                </div>
+                
+                <div class="testimonial-card">
+                  <div class="testimonial-header">
+                    <div class="testimonial-avatar">TD</div>
+                    <div>
+                      <div class="testimonial-name">Thomas Daniel</div>
+                      <div class="testimonial-location">Kochi, Kerala</div>
+                    </div>
+                  </div>
+                  <div class="testimonial-content">
+                    "Ordered food for my entire family. The agent even suggested a special Kerala fish curry that wasn't on the menu!"
+                  </div>
+                  <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer bg-light text-center">
+                <button class="btn btn-sm btn-outline-primary">
+                  View All Testimonials <i class="fas fa-chevron-right ms-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conversation History Section (50% width) -->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Conversations</h5>
+                <div class="d-flex">
+                  <input type="text" class="form-control form-control-sm me-2" id="conversation-search" placeholder="Search...">
+                  <button class="btn btn-sm btn-outline-primary" id="refresh-conversations">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <!-- Conversations Tabs -->
+                <ul class="nav nav-tabs nav-fill" id="conversationTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
+                      All
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab">
+                      Restaurant
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="hospital-tab" data-bs-toggle="tab" data-bs-target="#hospital" type="button" role="tab">
+                      Hospital
+                    </button>
+                  </li>
+                </ul>
+
+                <!-- Conversation Tab Content -->
+                <div class="tab-content p-3 conversation-container" id="conversationTabsContent">
+                  <!-- All Conversations Tab -->
+                  <div class="tab-pane fade show active" id="all" role="tabpanel">
+                    <div id="conversations-loading" class="loading-indicator">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
+                    <div id="all-conversations">
+                      <!-- Sample conversations -->
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Masala Dosa Order
+                            <span class="conversation-tag tag-restaurant">Restaurant</span>
+                            <span class="conversation-tag tag-order">Order</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> Today, 9:32 AM</span>
+                            <span><i class="far fa-user me-1"></i> Rajesh Nair</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Cardiology Appointment
+                            <span class="conversation-tag tag-hospital">Hospital</span>
+                            <span class="conversation-tag tag-appointment">Appointment</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> Yesterday, 2:15 PM</span>
+                            <span><i class="far fa-user me-1"></i> Meena Krishnamurthy</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Dinner Reservation
+                            <span class="conversation-tag tag-restaurant">Restaurant</span>
+                            <span class="conversation-tag tag-reservation">Reservation</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> Yesterday, 5:42 PM</span>
+                            <span><i class="far fa-user me-1"></i> Aditya Pillai</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Restaurant Tab -->
+                  <div class="tab-pane fade" id="restaurant" role="tabpanel">
+                    <div id="restaurant-conversations-loading" class="loading-indicator" style="display: none;">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
+                    <div id="restaurant-conversations-content">
+                      <!-- Restaurant sample conversations -->
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Masala Dosa Order
+                            <span class="conversation-tag tag-restaurant">Restaurant</span>
+                            <span class="conversation-tag tag-order">Order</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> Today, 9:32 AM</span>
+                            <span><i class="far fa-user me-1"></i> Rajesh Nair</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" onclick="showConversationDetails('restaurant1')" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" onclick="downloadConversation('restaurant1')" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Biryani Delivery
+                            <span class="conversation-tag tag-restaurant">Restaurant</span>
+                            <span class="conversation-tag tag-order">Delivery</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> Yesterday, 7:15 PM</span>
+                            <span><i class="far fa-user me-1"></i> Priya Desai</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" onclick="showConversationDetails('restaurant2')" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" onclick="downloadConversation('restaurant2')" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            South Indian Thali Reservation
+                            <span class="conversation-tag tag-restaurant">Restaurant</span>
+                            <span class="conversation-tag tag-reservation">Reservation</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> 2 days ago, 6:20 PM</span>
+                            <span><i class="far fa-user me-1"></i> Venkatesh Iyer</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" onclick="showConversationDetails('restaurant3')" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" onclick="downloadConversation('restaurant3')" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Hospital Tab -->
+                  <div class="tab-pane fade" id="hospital" role="tabpanel">
+                    <div id="hospital-conversations-loading" class="loading-indicator" style="display: none;">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
+                    <div id="hospital-conversations-content">
+                      <!-- Hospital sample conversations -->
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Cardiology Appointment
+                            <span class="conversation-tag tag-hospital">Hospital</span>
+                            <span class="conversation-tag tag-appointment">Appointment</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> Yesterday, 2:15 PM</span>
+                            <span><i class="far fa-user me-1"></i> Meena Krishnamurthy</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" onclick="showConversationDetails('hospital1')" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" onclick="downloadConversation('hospital1')" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Pediatric Follow-up
+                            <span class="conversation-tag tag-hospital">Hospital</span>
+                            <span class="conversation-tag tag-appointment">Follow-up</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> 3 days ago, 10:30 AM</span>
+                            <span><i class="far fa-user me-1"></i> Ravi Subramaniam</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" onclick="showConversationDetails('hospital2')" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" onclick="downloadConversation('hospital2')" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="conversation-card">
+                        <div class="conversation-header">
+                          <h5>
+                            Lab Test Results
+                            <span class="conversation-tag tag-hospital">Hospital</span>
+                            <span class="conversation-tag tag-appointment">Results</span>
+                          </h5>
+                          <div class="conversation-meta">
+                            <span><i class="far fa-clock me-1"></i> 2 days ago, 4:45 PM</span>
+                            <span><i class="far fa-user me-1"></i> Ananya Pillai</span>
+                          </div>
+                        </div>
+                        <div class="conversation-footer">
+                          <span class="badge bg-success">Completed</span>
+                          <div class="action-buttons">
+                            <a href="#" onclick="showConversationDetails('hospital3')" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="#" onclick="downloadConversation('hospital3')" data-bs-toggle="tooltip" title="Download"><i class="fas fa-download"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer bg-light text-center">
+                <button class="btn btn-sm btn-outline-primary" id="view-all-conversations">
+                  View All Conversations <i class="fas fa-chevron-right ms-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="copyright">
+          <p>&copy; 2023 Ayra. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="bundle.js"></script>
+    <script src="data-store.js"></script>
+    <script src="indian-localization.js"></script>
+    <script src="notification-handler.js"></script>
+    <script src="language-handler.js"></script>
+    <script src="dashboard.js"></script>
+    <script>
+      // Initialize tooltips
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+      })
+
+      // Additional initialization for the refresh buttons
+      document.addEventListener('DOMContentLoaded', function() {
+        // Refresh conversations button
+        const refreshConversationsBtn = document.getElementById('refresh-conversations');
+        if (refreshConversationsBtn) {
+          refreshConversationsBtn.addEventListener('click', function() {
+            loadConversations();
+            console.log('Refreshing conversations...');
+            showNotification('Refreshed', 'Conversation data has been updated', 'success');
+          });
+        }
+
+        // Refresh activities button
+        const refreshActivitiesBtn = document.getElementById('refresh-activities');
+        if (refreshActivitiesBtn) {
+          refreshActivitiesBtn.addEventListener('click', function() {
+            loadUpcomingActivities();
+            console.log('Refreshing activities...');
+            showNotification('Refreshed', 'Activities have been updated', 'success');
+          });
+        }
+
+        // Update last updated time
+        function updateLastUpdatedTime() {
+          const timeEl = document.getElementById('last-updated-time');
+          if (timeEl) {
+            timeEl.textContent = new Date().toLocaleTimeString();
+          }
+        }
+
+        // Update time when refreshing data
+        if (refreshConversationsBtn) {
+          refreshConversationsBtn.addEventListener('click', updateLastUpdatedTime);
+        }
+        if (refreshActivitiesBtn) {
+          refreshActivitiesBtn.addEventListener('click', updateLastUpdatedTime);
+        }
+
+        // Set up activity search
+        const activitySearch = document.getElementById('activity-search');
+        if (activitySearch) {
+          activitySearch.addEventListener('input', function() {
+            filterActivities(this.value.toLowerCase());
+          });
+        }
+
+        // Set up conversation search
+        const conversationSearch = document.getElementById('conversation-search');
+        if (conversationSearch) {
+          conversationSearch.addEventListener('input', function() {
+            filterConversations(this.value.toLowerCase());
+          });
+        }
+        
+        // View all conversations button
+        const viewAllBtn = document.getElementById('view-all-conversations');
+        if (viewAllBtn) {
+          viewAllBtn.addEventListener('click', function() {
+            // This could redirect to a detailed conversations page
+            console.log('View all conversations clicked');
+            showAlert('Conversations', 'Detailed conversations view will be available in the next update.');
+          });
+        }
+        
+        // Apply filter button
+        const filterApplyBtn = document.getElementById('filter-apply');
+        if (filterApplyBtn) {
+          filterApplyBtn.addEventListener('click', function() {
+            const searchTerm = document.getElementById('activity-search')?.value || '';
+            filterActivities(searchTerm.toLowerCase());
+            showNotification('Filters Applied', 'Activity list has been filtered based on your criteria.', 'info');
+          });
+        }
+        
+        // Reset filter button
+        const filterResetBtn = document.getElementById('filter-reset');
+        if (filterResetBtn) {
+          filterResetBtn.addEventListener('click', function() {
+            const searchInput = document.getElementById('activity-search');
+            if (searchInput) searchInput.value = '';
+            filterActivities('');
+            showNotification('Filters Reset', 'All filters have been cleared.', 'info');
+          });
+        }
+        
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+          // Check if user previously set a theme preference
+          const savedTheme = localStorage.getItem('theme');
+          if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+          }
+          
+          themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update icon and save preference
+            if (document.body.classList.contains('dark-mode')) {
+              themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+              localStorage.setItem('theme', 'dark');
+              showNotification('Theme Changed', 'Dark mode enabled', 'info');
+            } else {
+              themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+              localStorage.setItem('theme', 'light');
+              showNotification('Theme Changed', 'Light mode enabled', 'info');
+            }
+          });
+        }
+        
+        // Handle quick action buttons
+        document.querySelectorAll('.quick-action-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const action = this.textContent.trim();
+            showNotification('Action Triggered', `"${action}" will be available in the next update`, 'info');
+          });
+        });
+        
+        // Show welcome notification on first load
+        if (!localStorage.getItem('welcomeShown')) {
+          setTimeout(() => {
+            showNotification('Welcome to Ayra Dashboard', 'You now have full multi-language support with Indian localization', 'success', 8000);
+            localStorage.setItem('welcomeShown', 'true');
+          }, 1000);
+        }
+
+        // Additional initialization for button effects
+        document.addEventListener('DOMContentLoaded', function() {
+          // Add ripple effect to quick action buttons
+          const quickActionButtons = document.querySelectorAll('.quick-action-btn');
+          
+          quickActionButtons.forEach(button => {
+            button.addEventListener('mousedown', function(e) {
+              const x = e.clientX - this.getBoundingClientRect().left;
+              const y = e.clientY - this.getBoundingClientRect().top;
+              
+              const ripple = document.createElement('span');
+              ripple.className = 'ripple-effect';
+              ripple.style.left = `${x}px`;
+              ripple.style.top = `${y}px`;
+              
+              this.appendChild(ripple);
+              
+              setTimeout(() => {
+                ripple.remove();
+              }, 600);
+            });
+          });
+        });
+      });
+    </script>
+
+    <!-- Add Google Fonts for Indian languages -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </body>
+</html> 

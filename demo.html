@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Call Demo - Ayra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #2d46c2;
+        --secondary-color: #6c757d;
+        --accent-color: #5567d9;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+      }
+      
+      body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--dark-color);
+        background-color: #f5f7ff;
+        min-height: 100vh;
+      }
+      
+      .navbar {
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      .navbar-brand {
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+      
+      .nav-link {
+        color: var(--dark-color);
+        font-weight: 500;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-link:hover {
+        color: var(--primary-color);
+      }
+      
+      .page-header {
+        background: linear-gradient(135deg, #f5f7ff 0%, #e3e7ff 100%);
+        padding: 60px 0 30px;
+        border-radius: 0 0 50px 50px;
+      }
+      
+      .page-header h1 {
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--dark-color);
+      }
+      
+      .page-header p {
+        color: var(--secondary-color);
+      }
+      
+      .agent-selection {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: -50px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 10;
+      }
+      
+      .agent-option {
+        background: #fff;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        height: 100%;
+      }
+      
+      .agent-option:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      }
+      
+      .agent-option.active {
+        border-color: var(--primary-color);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      }
+      
+      .agent-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(45, 70, 194, 0.1) 0%, rgba(85, 103, 217, 0.1) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+      
+      .agent-icon i {
+        font-size: 36px;
+        color: var(--primary-color);
+      }
+      
+      .agent-option h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      
+      .agent-option p {
+        color: var(--secondary-color);
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      
+      .call-interface {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        display: none;
+      }
+      
+      .call-controls {
+        margin-top: 30px;
+      }
+      
+      .call-button {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(45, 70, 194, 0.3);
+      }
+      
+      .call-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 15px 30px rgba(45, 70, 194, 0.4);
+      }
+      
+      .call-button i {
+        font-size: 36px;
+      }
+      
+      .call-button.end-call {
+        background: #dc3545;
+        box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+        display: none;
+      }
+      
+      .call-button.end-call:hover {
+        box-shadow: 0 15px 30px rgba(220, 53, 69, 0.4);
+      }
+      
+      .call-status {
+        margin-top: 20px;
+        font-weight: 500;
+        color: var(--secondary-color);
+      }
+      
+      .call-instructions {
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--secondary-color);
+      }
+      
+      .conversation {
+        max-width: 600px;
+        margin: 30px auto 0;
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        height: 300px;
+        overflow-y: auto;
+        text-align: left;
+      }
+      
+      .message {
+        margin-bottom: 15px;
+        display: flex;
+      }
+      
+      .message-content {
+        max-width: 80%;
+        padding: 10px 15px;
+        border-radius: 10px;
+        position: relative;
+      }
+      
+      .message-time {
+        font-size: 0.7rem;
+        color: var(--secondary-color);
+        margin-top: 5px;
+      }
+      
+      .user-message .message-content {
+        background-color: #f0f2ff;
+        margin-right: auto;
+        text-align: left;
+      }
+      
+      .assistant-message .message-content {
+        background-color: var(--primary-color);
+        color: #fff;
+        margin-left: auto;
+        text-align: right;
+      }
+      
+      .call-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+      }
+      
+      .action-button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #f0f2ff;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .action-button:hover {
+        background: var(--primary-color);
+        color: #fff;
+      }
+      
+      .action-button i {
+        font-size: 20px;
+      }
+      
+      .action-button.mute.active {
+        background: #dc3545;
+        color: #fff;
+      }
+      
+      .typing-indicator {
+        display: none;
+        margin: 15px auto;
+        width: 70px;
+        text-align: center;
+      }
+      
+      .typing-indicator span {
+        height: 10px;
+        width: 10px;
+        float: left;
+        margin: 0 1px;
+        background-color: var(--primary-color);
+        display: block;
+        border-radius: 50%;
+        opacity: 0.4;
+      }
+      
+      .typing-indicator span:nth-of-type(1) {
+        animation: 1s blink infinite 0.3333s;
+      }
+      
+      .typing-indicator span:nth-of-type(2) {
+        animation: 1s blink infinite 0.6666s;
+      }
+      
+      .typing-indicator span:nth-of-type(3) {
+        animation: 1s blink infinite 0.9999s;
+      }
+      
+      @keyframes blink {
+        50% {
+          opacity: 1;
+        }
+      }
+      
+      .feedback {
+        margin-top: 30px;
+        text-align: center;
+        display: none;
+      }
+      
+      .rating {
+        margin: 10px 0;
+      }
+      
+      .rating i {
+        color: #ccc;
+        font-size: 24px;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .rating i:hover,
+      .rating i.active {
+        color: #ffc107;
+      }
+      
+      footer {
+        background-color: #fff;
+        padding: 20px 0;
+        border-top: 1px solid #eee;
+        margin-top: 100px;
+        text-align: center;
+      }
+      
+      .copyright {
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">Ayra</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="demo.html">Call Demo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard.html">Dashboard</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="page-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto text-center">
+            <h1>Experience Our AI Assistants</h1>
+            <p class="lead">Test our intelligent agents for restaurant and hospital services</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Agent Selection Section -->
+    <section class="py-5">
+      <div class="container">
+        <div class="agent-selection" id="agentSelection">
+          <div class="row text-center mb-4">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="fw-bold">Choose Your Assistant</h2>
+              <p class="text-muted">Select which type of assistant you'd like to interact with</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="agent-option" data-agent="restaurant" id="restaurantOption">
+                <div class="agent-icon">
+                  <i class="fas fa-utensils"></i>
+                </div>
+                <h3>Restaurant Assistant</h3>
+                <p>Perfect for table reservations, takeout orders, menu inquiries, and more.</p>
+                <span class="badge bg-primary">Ayra 1</span>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="agent-option" data-agent="hospital" id="hospitalOption">
+                <div class="agent-icon">
+                  <i class="fas fa-hospital"></i>
+                </div>
+                <h3>Hospital Assistant</h3>
+                <p>Helps with medical appointments, health inquiries, reminders, and follow-ups.</p>
+                <span class="badge bg-primary">Ayra Hospital Agent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Call Interface -->
+        <div class="call-interface" id="callInterface">
+          <div class="row">
+            <div class="col-lg-12">
+              <h3 class="mb-3">Speaking with <span id="agentType">Assistant</span></h3>
+              
+              <div class="conversation" id="conversation">
+                <!-- Messages will be added here dynamically -->
+              </div>
+
+              <div class="typing-indicator" id="typingIndicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <div class="call-actions">
+                <div class="action-button mute" id="muteButton" title="Mute">
+                  <i class="fas fa-microphone"></i>
+                </div>
+                <div class="call-controls">
+                  <div class="call-button" id="callButton">
+                    <i class="fas fa-phone"></i>
+                  </div>
+                  <div class="call-button end-call" id="endCallButton">
+                    <i class="fas fa-phone-slash"></i>
+                  </div>
+                </div>
+                <div class="action-button" id="volumeButton" title="Adjust Volume">
+                  <i class="fas fa-volume-up"></i>
+                </div>
+              </div>
+
+              <div class="call-status" id="callStatus">Ready to start call</div>
+              <div class="call-instructions" id="callInstructions">Click the phone button to start your conversation</div>
+              
+              <div class="feedback" id="feedbackSection">
+                <h4>How was your experience?</h4>
+                <div class="rating" id="ratingStars">
+                  <i class="far fa-star" data-rating="1"></i>
+                  <i class="far fa-star" data-rating="2"></i>
+                  <i class="far fa-star" data-rating="3"></i>
+                  <i class="far fa-star" data-rating="4"></i>
+                  <i class="far fa-star" data-rating="5"></i>
+                </div>
+                <div class="form-group mt-3">
+                  <textarea class="form-control" id="feedbackText" rows="3" placeholder="Share your feedback (optional)"></textarea>
+                </div>
+                <button class="btn btn-primary mt-3" id="submitFeedback">Submit Feedback</button>
+                <button class="btn btn-outline-secondary mt-3 ms-2" id="newCall">Start New Call</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="copyright">
+          <p>&copy; 2023 Ayra. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="bundle.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Elements
+        const restaurantOption = document.getElementById('restaurantOption');
+        const hospitalOption = document.getElementById('hospitalOption');
+        const agentSelection = document.getElementById('agentSelection');
+        const callInterface = document.getElementById('callInterface');
+        const agentType = document.getElementById('agentType');
+        const callButton = document.getElementById('callButton');
+        const endCallButton = document.getElementById('endCallButton');
+        const callStatus = document.getElementById('callStatus');
+        const callInstructions = document.getElementById('callInstructions');
+        const conversation = document.getElementById('conversation');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const muteButton = document.getElementById('muteButton');
+        const volumeButton = document.getElementById('volumeButton');
+        const feedbackSection = document.getElementById('feedbackSection');
+        const ratingStars = document.getElementById('ratingStars');
+        const submitFeedback = document.getElementById('submitFeedback');
+        const newCall = document.getElementById('newCall');
+        
+        // State variables
+        let selectedAgent = '';
+        let callActive = false;
+        let isMuted = false;
+        
+        // Agent selection
+        restaurantOption.addEventListener('click', function() {
+          selectAgent('restaurant');
+        });
+        
+        hospitalOption.addEventListener('click', function() {
+          selectAgent('hospital');
+        });
+        
+        function selectAgent(agent) {
+          selectedAgent = agent;
+          
+          // Update UI
+          if (agent === 'restaurant') {
+            restaurantOption.classList.add('active');
+            hospitalOption.classList.remove('active');
+            agentType.textContent = 'Restaurant Assistant';
+          } else {
+            hospitalOption.classList.add('active');
+            restaurantOption.classList.remove('active');
+            agentType.textContent = 'Hospital Assistant';
+          }
+          
+          // Show call interface
+          setTimeout(() => {
+            agentSelection.style.display = 'none';
+            callInterface.style.display = 'block';
+          }, 500);
+        }
+        
+        // Call controls
+        callButton.addEventListener('click', function() {
+          startCall();
+        });
+        
+        endCallButton.addEventListener('click', function() {
+          endCall();
+        });
+        
+        function startCall() {
+          if (!callActive) {
+            callActive = true;
+            callButton.style.display = 'none';
+            endCallButton.style.display = 'flex';
+            callStatus.textContent = 'Connecting...';
+            callInstructions.textContent = 'Please wait while we connect you';
+            
+            // Simulate connection delay
+            setTimeout(() => {
+              callStatus.textContent = 'Connected';
+              callInstructions.textContent = 'Speak naturally to interact with the assistant';
+              
+              // Add initial assistant message
+              let initialMessage = '';
+              if (selectedAgent === 'restaurant') {
+                initialMessage = 'Hello! Welcome to Ayra Restaurant. How may I assist you today?';
+              } else {
+                initialMessage = 'Namaste! Thank you for calling Bengaluru HealthConnect. How may I assist you today?';
+              }
+              
+              // Show typing indicator
+              typingIndicator.style.display = 'block';
+              
+              // Simulate typing delay
+              setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                addMessage('assistant', initialMessage);
+              }, 1500);
+            }, 2000);
+          }
+        }
+        
+        function endCall() {
+          if (callActive) {
+            callActive = false;
+            callStatus.textContent = 'Call ended';
+            callInstructions.textContent = 'Thank you for testing our AI assistant';
+            endCallButton.style.display = 'none';
+            
+            // Show feedback section
+            setTimeout(() => {
+              feedbackSection.style.display = 'block';
+            }, 1000);
+          }
+        }
+        
+        // Add a message to the conversation
+        function addMessage(sender, text) {
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `message ${sender}-message`;
+          
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'message-content';
+          
+          const messageText = document.createElement('p');
+          messageText.textContent = text;
+          
+          const timeDiv = document.createElement('div');
+          timeDiv.className = 'message-time';
+          
+          // Get current time
+          const now = new Date();
+          const hours = now.getHours().toString().padStart(2, '0');
+          const minutes = now.getMinutes().toString().padStart(2, '0');
+          timeDiv.textContent = `${hours}:${minutes}`;
+          
+          contentDiv.appendChild(messageText);
+          contentDiv.appendChild(timeDiv);
+          messageDiv.appendChild(contentDiv);
+          conversation.appendChild(messageDiv);
+          
+          // Scroll to bottom
+          conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        // Mute button functionality
+        muteButton.addEventListener('click', function() {
+          isMuted = !isMuted;
+          if (isMuted) {
+            muteButton.classList.add('active');
+            muteButton.querySelector('i').className = 'fas fa-microphone-slash';
+          } else {
+            muteButton.classList.remove('active');
+            muteButton.querySelector('i').className = 'fas fa-microphone';
+          }
+        });
+        
+        // Rating stars functionality
+        const stars = ratingStars.querySelectorAll('i');
+        stars.forEach(star => {
+          star.addEventListener('click', function() {
+            const rating = this.getAttribute('data-rating');
+            stars.forEach(s => {
+              if (s.getAttribute('data-rating') <= rating) {
+                s.className = 'fas fa-star active';
+              } else {
+                s.className = 'far fa-star';
+              }
+            });
+          });
+        });
+        
+        // Submit feedback
+        submitFeedback.addEventListener('click', function() {
+          alert('Thank you for your feedback!');
+          feedbackSection.style.display = 'none';
+          callButton.style.display = 'flex';
+          callStatus.textContent = 'Ready to start call';
+          callInstructions.textContent = 'Click the phone button to start your conversation';
+        });
+        
+        // Start new call
+        newCall.addEventListener('click', function() {
+          feedbackSection.style.display = 'none';
+          callButton.style.display = 'flex';
+          callStatus.textContent = 'Ready to start call';
+          callInstructions.textContent = 'Click the phone button to start your conversation';
+          conversation.innerHTML = '';
+        });
+      });
+    </script>
+  </body>
+</html> 
